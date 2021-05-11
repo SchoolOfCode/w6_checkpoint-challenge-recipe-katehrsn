@@ -4,8 +4,10 @@ const YOUR_APP_KEY = "3ae63af785bcc6375c7f7cc983b967a1";
 
 // DOM Variables
 const recipeLink = document.querySelector("#recipe-link");
-const image = document.querySelector("#image");
+const image = document.querySelector("#recipe-image");
 const ingredientsList = document.querySelector("#ingredients-list");
+const lyricsLink = document.querySelector("#lyrics-link");
+const songThumbnail = document.querySelector("#song-thumbnail");
 
 const form = document.querySelector("form");
 form.addEventListener("submit",handleRecipeSubmit);
@@ -15,6 +17,7 @@ let foodToSearch = null;
 // Functions
 function handleRecipeSubmit(event) {
   fetchRecipe(foodToSearch);
+  getLyrics(foodToSearch);
   event.preventDefault();
   form.reset();
 }
@@ -46,12 +49,31 @@ function addListItem(item) {
   ingredientsList.appendChild(listItem);
 }
 
+async function getLyrics(food){
+  let response = await fetch(`https://genius.p.rapidapi.com/search?q=${foodToSearch}`, {
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-key": "805e4a3966msh7007d353855a060p165dd0jsneafb58a97689",
+      "x-rapidapi-host": "genius.p.rapidapi.com"
+    }
+  });
+  let songsAllHits = await response.json();
+  let song = songsAllHits.response.hits[0];
+  lyricsLink.innerHTML = song.result.full_title;
+  lyricsLink.href = song.result.url;
+  songThumbnail.src = song.result.header_image_thumbnail_url;
+
+  console.log(song.result)
+}
 // TO DO:
 
-// - change input submit to on click and 'enter' - more intuitive for desktop
-// - stop form resubmit without input change (to stop ingredients list repeating)
-// - add 2nd api - music?
-// - 
+// - change input submit to on click and 'enter' - more intuitive for desktop - DONE
+// - stop form resubmit without input change (to stop ingredients list repeating) - DONE (not with validation but just emptying ul)
+// - add 2nd api - music? - DONE
+// - display random recipe function:
+//    - generate random number between 1-10 and display that recipe in search array?
+// - make music div colours change with song art colours
+
 
 
 
