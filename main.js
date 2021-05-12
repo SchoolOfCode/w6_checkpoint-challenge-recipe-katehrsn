@@ -1,4 +1,4 @@
-// API Key
+// Recipe Search API Key
 const YOUR_APP_ID = "3cf0d53e";
 const YOUR_APP_KEY = "3ae63af785bcc6375c7f7cc983b967a1";
 
@@ -8,9 +8,13 @@ const image = document.querySelector("#recipe-image");
 const ingredientsList = document.querySelector("#ingredients-list");
 const lyricsLink = document.querySelector("#lyrics-link");
 const songThumbnail = document.querySelector("#song-thumbnail");
-
 const form = document.querySelector("form");
+const random = document.querySelector("#random-recipe");
+
+// Event Listeners
 form.addEventListener("submit",handleRecipeSubmit);
+random.addEventListener("click", handleRandomClick);
+
 // Variables
 let foodToSearch = null;
 
@@ -20,6 +24,14 @@ function handleRecipeSubmit(event) {
   getLyrics(foodToSearch);
   event.preventDefault();
   form.reset();
+  random.innerHTML = `Get me a different ${foodToSearch} recipe!`;
+
+  
+}
+
+function handleRandomClick(){
+  fetchRandomRecipe(foodToSearch);
+  random.innerHTML = `Get me a different ${foodToSearch} recipe!`;
 }
 
 function handleFoodChange() {
@@ -65,15 +77,35 @@ async function getLyrics(food){
 
   console.log(song.result)
 }
+
+function randomNumber(){
+  return Math.floor((Math.random() * 10) + 1);
+}
+
+async function fetchRandomRecipe(food) {
+  const requestURL = `https://api.edamam.com/search?q=${foodToSearch}&app_id=${YOUR_APP_ID}&app_key=${YOUR_APP_KEY}`;
+  let response = await fetch(requestURL);
+  let recipeAllHits = await response.json();
+  let i = randomNumber();
+  let recipe = recipeAllHits.hits[i];
+  recipeLink.innerHTML = recipe.recipe.label;
+  recipeLink.href = recipe.recipe.url;
+  image.src = recipe.recipe.image;
+  ingredientsList.innerHTML = "";
+  ingredients = recipe.recipe.ingredients;
+  ingredients.forEach(addListItem);
+  
+  console.log(recipe)
+}
+
 // TO DO:
 
 // - change input submit to on click and 'enter' - more intuitive for desktop - DONE
 // - stop form resubmit without input change (to stop ingredients list repeating) - DONE (not with validation but just emptying ul)
 // - add 2nd api - music? - DONE
 // - display random recipe function:
-//    - generate random number between 1-10 and display that recipe in search array?
+//    - generate random number between 1-10 and display that recipe in search array? - DONE
 // - make music div colours change with song art colours
-
-
-
-
+// - don't allow button presses to work without valid input
+// - hide random button unless a recipe is displayed
+// - make display random song function 
