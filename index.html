@@ -8,15 +8,24 @@
   <body>
     <section id="recipe-section">
       <h2 class="section-heading">Welcome to the Recipe Finder!</h2>
+      <form>
       <input
         aria-label="food-input"
         id="food-input"
         onchange="handleFoodChange()"
       />
-      <button id="recipe-button" onclick="handleRecipeClick()">
+      <button type="submit" id="recipe-button" >
         Give me a recipe!
       </button>
-      <a id="recipe-label"></a>
+    </form>
+    <button id="random-recipe">Give me a different recipe!</button>
+      <a id="recipe-link" target="_blank"></a>
+      <img id="recipe-image">
+      <ul id="ingredients-list"></ul>
+    </section>
+    <section id="music">
+      <img id="song-thumbnail">
+      <a id="lyrics-link" target="_blank"></a>
     </section>
     <script src="./main.js"></script>
   </body>
